@@ -149,7 +149,7 @@ class Score:
         """
         表示するテキストの設定
         """
-        self.fonto = pg.font.Font(None, 30)
+        self.fonto = pg.font.Font(None, 50)
         self.score = 0
 
     def update(self, add):
@@ -184,6 +184,7 @@ def main():
     bird = Bird((300, 200))
     beam = None #beam変数を初期化
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
+    score = Score()
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -207,15 +208,16 @@ def main():
                 return
 
         for j, bomb in enumerate(bombs):
-            if beam is not None:
-                if beam.rct.colliderect(bomb.rct):
+            # if bomb is not None and beam.rct.colliderect(bomb.rct):
+            if beam is not None: #ビームがあるとき
+                if beam.rct.colliderect(bomb.rct): #ビームが当たったとき
                     beam = None #ビームを消す
                     bombs[j] = None #爆弾を消す
                     bird.change_img(6, screen) #よろこびエフェクト
-                    score.update(1)
+                    Score.update(1)
                     break
                     # Score.add()
-                bombs = [bomb for bomb in bombs if bomb is not None] #撃ち落されてない爆弾だけのリストにする
+            bombs = [bomb for bomb in bombs if bomb is not None] #撃ち落されてない爆弾だけのリストにする
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
