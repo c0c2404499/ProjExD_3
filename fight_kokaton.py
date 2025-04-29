@@ -141,6 +141,42 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
+class Score:
+    """
+    撃ち落とした爆弾の数を表示するクラス
+    """
+    def __init__(self):
+        """
+        表示するテキストの設定
+        """
+        self.fonto = pg.font.Font(None, 30)
+        self.score = 0
+
+    def update(self, add):
+        self.score += add
+
+    def draw(self, screen: pg.Surface):
+        score_str = f"Score:{self.score}"
+        score_surf = self.font.render(score_str, True, (0, 0, 0))
+        screen.blit(score_surf, [10, 10])
+        # self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        # self.color = (0, 0, 255)
+        # self.score = 0
+        # self.update_img()
+        # self.img = self.fonto.render(f"Score:{self.score}", True, (0, 0, 255))
+        # self.rct = self.img.get_rect()
+        #self.rct.center = (100, HEIGHT - 50)
+        # screen.blit(text, [20, 100])
+        # pg.display.update()
+        # time.sleep(5)
+
+    # def update(self, screen: pg.Surface):
+    #     self.update_img()
+    #     screen.blit(self.img, self.rct)
+
+    # def add(self, point, int = 1):
+    #     current_score += 1
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -159,7 +195,6 @@ def main():
                 beam = Beam(bird)
         screen.blit(bg_img, [0, 0])
         
-        #if bomb is not None:
         for bomb in bombs:
             if bird.rct.colliderect(bomb.rct):
                 # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
@@ -176,7 +211,10 @@ def main():
                 if beam.rct.colliderect(bomb.rct):
                     beam = None #ビームを消す
                     bombs[j] = None #爆弾を消す
-                    bird.change_img(0, screen) #よろこびエフェクト
+                    bird.change_img(6, screen) #よろこびエフェクト
+                    score.update(1)
+                    break
+                    # Score.add()
                 bombs = [bomb for bomb in bombs if bomb is not None] #撃ち落されてない爆弾だけのリストにする
 
         key_lst = pg.key.get_pressed()
@@ -185,6 +223,7 @@ def main():
             beam.update(screen)
         for bomb in bombs:
             bomb.update(screen)
+        # Score.update(screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
